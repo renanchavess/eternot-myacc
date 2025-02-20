@@ -84,6 +84,7 @@ defined('MYAAC') or die('Direct access not allowed!'); ?>
                     ),
                     'Items' => 'items',
                     'Tools' => array(
+                        'Add Tibia Coins' => 'addcoins',
                         'Donates' => 'pag_transactions',
                         'Premium/VIP Updater' => 'premiumvipupdater',
                         'Notepad' => 'notepad',
