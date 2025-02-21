@@ -5,6 +5,7 @@ Thumbs.db
 
 #
 /.htaccess
+*.rar
 
 # composer
 composer.lock

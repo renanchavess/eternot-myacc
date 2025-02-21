@@ -11,7 +11,7 @@ if (!empty($_POST['auction_price']) && !empty($_POST['auction_days'])) {
 
 
     /* ACCOUNT BY PLAYER */
-    $getAccount = $db->query('SELECT `id`, `premdays`, `coins`' . 'FROM `accounts`' . 'WHERE `id` = ' . $getCharacter['account_id'] . '');
+    $getAccount = $db->query('SELECT `id`, `premdays`,  `coins`, `coins_transferable`' . 'FROM `accounts`' . 'WHERE `id` = ' . $getCharacter['account_id'] . '');
     $getAccount = $getAccount->fetch();
     if ($getAccount['premdays'] > 0) {
         $character_prem = '<b>Premium Account</b>';
@@ -51,7 +51,7 @@ if (!empty($_POST['auction_price']) && !empty($_POST['auction_days'])) {
     }
 
 
-    $getAccount = $db->query('SELECT `id`, `premdays`, `coins`' . 'FROM `accounts`' . 'WHERE `id` = ' . $account_logged->getId() . '');
+    $getAccount = $db->query('SELECT `id`, `premdays`, `coins`, `coins_transferable`' . 'FROM `accounts`' . 'WHERE `id` = ' . $account_logged->getId() . '');
     $getAccount = $getAccount->fetch();
 
     $auction_inputdays = $_POST['auction_days'];
@@ -165,7 +165,7 @@ if (!empty($_POST['auction_price']) && !empty($_POST['auction_days'])) {
                                             <tr>
                                                 <td style="font-weight:normal;"><?= $getAccount['coins'] ?> <img
                                                         src="<?= $template_path; ?>/images/account/icon-tibiacoin.png">
-                                                    (<?= $getAccount['coins'] ?> <img
+                                                    (<?= $getAccount['coins_transferable'] ?> <img
                                                         src="<?= $template_path; ?>/images/account/icon-tibiacointrusted.png">)
                                                 </td>
                                                 <td style="font-weight:normal;"><?= $charbazaar_create ?> <img
@@ -562,7 +562,7 @@ if (!empty($_POST['auction_price']) && !empty($_POST['auction_days'])) {
     </div>
     <br>
 
-    <form method="post" action="?subtopic=createcharacterauction&step=confirm">
+    <form method="post" action="?subtopic=createcharacterauction&step=5">
         <input type="hidden" name="auction_price" value="<?= $_POST['auction_price'] ?>">
         <input type="hidden" name="auction_days" value="<?= $_POST['auction_days'] ?>">
         <input type="hidden" name="auction_character" value="<?= $_POST['auction_character'] ?>">
