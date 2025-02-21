@@ -9,7 +9,7 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
     /* PLAYERS END */
 
     /* ACCOUNT BY PLAYER */
-    $getAccount = $db->query('SELECT `id`, `premdays`, `coins`' . 'FROM `accounts`' . 'WHERE `id` = ' . $getCharacter['account_id'] . '');
+    $getAccount = $db->query('SELECT `id`, `premdays`, `coins`, `coins_transferable`' . 'FROM `accounts`' . 'WHERE `id` = ' . $getCharacter['account_id'] . '');
     $getAccount = $getAccount->fetch();
     if ($getAccount['premdays'] > 0) {
         $character_prem = '<b>Premium Account</b>';
@@ -46,7 +46,7 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
         $character_voc = 'None';
     }
 
-    $getAccountLogged = $db->query('SELECT `id`, `premdays`, `coins`' . 'FROM `accounts`' . 'WHERE `id` = ' . $account_logged->getId() . '');
+    $getAccountLogged = $db->query('SELECT `id`, `premdays`, `coins_transferable`' . 'FROM `accounts`' . 'WHERE `id` = ' . $account_logged->getId() . '');
     $getAccountLogged = $getAccountLogged->fetch();
     if ($getAccountLogged['premdays'] > 0) {
         $character_prem = '<b>Premium Account</b>';
@@ -154,7 +154,7 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
                                                 <td style="font-weight:normal;">
                                                     <?= $getAccount['coins'] ?> <img
                                                         src="<?= $template_path; ?>/images/account/icon-tibiacoin.png">
-                                                    (<?= $getAccount['coins'] ?> <img
+                                                    (<?= $getAccount['coins_transferable'] ?> <img
                                                         src="<?= $template_path; ?>/images/account/icon-tibiacointrusted.png">)
                                                 </td>
                                                 <td style="font-weight:normal;">
