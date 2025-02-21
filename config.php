@@ -37,7 +37,7 @@ $config = array(
 
 	// what client version are you using on this OT?
 	// used for the Downloads page and some templates as well
-    'client' => 1321, // 1321 = client 13.21
+    'client' => 1405, // 1405 = client 14.05
 
 	'session_prefix' => 'myaac_', // must be unique for every site on your server
 	'friendly_urls' => false, // mod_rewrite is required for this, it makes links looks more elegant to eye, and also are SEO friendly (example: https://localhost/guilds/Testing instead of https://localhost?subtopic=guilds&name=Testing). Remember to rename .htaccess.dist to .htaccess
@@ -291,7 +291,7 @@ $config = array(
 	'signature_cache_time' => 5, // how long to store cached file (in minutes), default 5 minutes
 	'signature_browser_cache' => 60, // how long to cache by browser (in minutes), default 1 hour
 
-    'allow_menu_animated' => true, // allow menu with animated gifs
+    'allow_menu_animated' => false, // allow menu with animated gifs
 
 	// news page
 	'news_limit' => 5, // limit of news on the latest news page
