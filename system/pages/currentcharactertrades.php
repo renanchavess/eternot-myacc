@@ -8,7 +8,7 @@ defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Current Auctions';
 
 if ($logged) {
-    $getAccountCoins = $db->query("SELECT `id`, `premdays`, `coins` FROM `accounts` WHERE `id` = {$account_logged->getId()}");
+    $getAccountCoins = $db->query("SELECT `id`, `premdays`, `coins`, `coins_transferable` FROM `accounts` WHERE `id` = {$account_logged->getId()}");
     $getAccountCoins = $getAccountCoins->fetch();
 } else {
     $account_logged = null;
@@ -168,7 +168,7 @@ if ($getPageAction == 'bid') {
         /* GET INFO CHARACTER END */
 
         if ($logged) {
-            $getAccount = $db->query('SELECT `id`, `premdays`, `coins` FROM `accounts` WHERE `id` = ' . $account_logged->getId() . '');
+            $getAccount = $db->query('SELECT `id`, `premdays`, `coins`, `coins_transferable` FROM `accounts` WHERE `id` = ' . $account_logged->getId() . '');
             $getAccount = $getAccount->fetch();
         }
 
@@ -180,11 +180,11 @@ if ($getPageAction == 'bid') {
         $character_voc = $config['vocations'][$character['vocation']];
         /* CONVERT VOCATION END */
 
-        if ($Auction_maxbid >= $getAccount['coins']) {
+        if ($Auction_maxbid >= $getAccount['coins_transferable']) {
             $Verif_CoinsAcc = 'false';
         } else {
             $Verif_CoinsAcc = 'true';
-        }
+        }        
 
         if ($Auction_maxbid > $getAuction['price'] && $Auction_maxbid > $getAuction['bid_price']) {
             $Verif_Price = 'true';
@@ -230,7 +230,7 @@ if ($getPageAction == 'bid') {
                                                     <td style="font-weight:normal;"><?= $getAccount['coins'] ?>
                                                         <img
                                                             src="<?= $template_path; ?>/images/account/icon-tibiacoin.png">
-                                                        (<?= $getAccount['coins'] ?> <img
+                                                        (<?= $getAccount['coins_transferable'] ?> <img
                                                             src="<?= $template_path; ?>/images/account/icon-tibiacointrusted.png">)
                                                     </td>
                                                     <td style="font-weight:normal;"><?= $charbazaar_bid ?> <img
