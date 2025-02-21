@@ -1,6 +1,6 @@
-# MyAAC
+# Crystal Server MyAAC
 
-MyAAC is a free and open-source Automatic Account Creator (AAC) written in PHP. It supports only MySQL databases.
+Crystal Server MyAAC is a free and open-source Automatic Account Creator (AAC) written in PHP. It supports only MySQL databases.
 
 ### Requirements
 
@@ -56,10 +56,6 @@ Created event calendar, getting information directly from events.xml
 Char Bazaar with configurable rates in config.php
 
 Changed login by email
-
-## Project supported by JetBrains
-
-We extend our heartfelt gratitude to Jetbrains for generously granting us licenses to collaborate on this and various other open-source initiatives.
 
 
 ### License
