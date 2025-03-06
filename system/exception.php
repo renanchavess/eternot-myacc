@@ -60,7 +60,7 @@ function exception_handler($exception)
       $message,
       $backtrace_formatted,
       base64_decode(
-        'UG93ZXJlZCBieSA8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vb3BlbnRpYmlhYnIvbXlhYWMiIHRhcmdldD0iX2JsYW5rIj5PcGVuVGliaWFCUjwvYT4gYW5kIENvbnRyaWJ1dG9ycy4='
+        'UG93ZXJlZCBieSA8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vanByemltYmEvY3J5c3RhbHNlcnZlci1teWFjYyIgdGFyZ2V0PSJfYmxhbmsiPkNyeXN0YWwgU2VydmVyPC9hPiBhbmQgQ29udHJpYnV0b3JzLg=='
       ),
     ],
     $content

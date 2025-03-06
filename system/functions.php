@@ -708,7 +708,7 @@ function template_footer()
   return $ret .
     '<br/>' .
     base64_decode(
-      'Q29weXJpZ2h0IGJ5IE15YWFjIDxzdHJvbmc+JmNvcHk7IE9wZW5UaWJpYUJSPC9zdHJvbmc+LiBBbGwgcmlnaHRzIHJlc2VydmVkLg=='
+      'Q29weXJpZ2h0IGJ5IE15YWFjIDxzdHJvbmc+JmNvcHk7IENyeXN0YWwgU2VydmVyPC9zdHJvbmc+LiBBbGwgcmlnaHRzIHJlc2VydmVkLg=='
     );
 }
 

@@ -39,7 +39,7 @@
         <div class="break"></div>
     </div>
     <div class="pt-3">
-        <p style="text-align: center;"><?= base64_decode('UG93ZXJlZCBieSA8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vb3BlbnRpYmlhYnIvbXlhYWMiIHRhcmdldD0iX2JsYW5rIj5PcGVuVGliaWFCUjwvYT4gYW5kIENvbnRyaWJ1dG9ycy4=') ?></p>
+        <p style="text-align: center;"><?= base64_decode('UG93ZXJlZCBieSA8YSBocmVmPSJodHRwczovL2dpdGh1Yi5jb20vanByemltYmEvY3J5c3RhbHNlcnZlci1teWFjYyIgdGFyZ2V0PSJfYmxhbmsiPkNyeXN0YWwgU2VydmVyPC9hPiBhbmQgQ29udHJpYnV0b3JzLg==') ?></p>
     </div>
 </main>
 </body>
