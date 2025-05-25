@@ -143,8 +143,18 @@ class CreateCharacter
 
         global $db;
 
-        if ($sex == "0")
-            $char_to_copy->setLookType(136);
+        if ($vocation == "9") { // Monk vocation
+            if ($sex == "0") {
+                $char_to_copy->setLookType(1825); // female
+            }
+            else{
+                $char_to_copy->setLookType(1824); // male
+            }
+        }
+        else {
+            if ($sex == "0")
+                $char_to_copy->setLookType(136);
+        }
 
         $player = new OTS_Player();
         $player->setName($name);
