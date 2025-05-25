@@ -173,6 +173,8 @@ $config = array(
 		6 => 'Elder Druid',
 		7 => 'Royal Paladin',
 		8 => 'Elite Knight',
+		9 => 'Monk',
+		10 => 'Exhalted Monk',
 	),
 
 	// new character config
@@ -181,7 +183,8 @@ $config = array(
 		1 => 'Sorcerer Sample',
 		2 => 'Druid Sample',
 		3 => 'Paladin Sample',
-		4 => 'Knight Sample'
+		4 => 'Knight Sample',
+		9 => 'Monk Sample',
 	),
 
     'use_character_sample_skills' => false,
