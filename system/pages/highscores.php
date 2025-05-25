@@ -215,6 +215,9 @@ if ($skill >= POT::SKILL_FIRST && $skill <= POT::SKILL_LAST) { // skills
                                         <option value="druid" <?= $vocation == 'druid' ? 'selected' : '' ?>>
                                             Druids
                                         </option>
+                                        <option value="monk" <?= $vocation == 'monk' ? 'selected' : '' ?>>
+                                            Monks
+                                        </option>
                                     </select>
                                 </td>
                                 <td>

@@ -42,6 +42,7 @@ insert_sample_if_not_exist(array('name' => 'Sorcerer Sample', 'level' => 8, 'voc
 insert_sample_if_not_exist(array('name' => 'Druid Sample', 'level' => 8, 'vocation_id' => 2, 'health' => 185, 'healthmax' => 185, 'experience' => 4200, 'looktype' => 130, 'mana' => 90, 'manamax' => 90, 'soul' => 100, 'cap' => 470));
 insert_sample_if_not_exist(array('name' => 'Paladin Sample', 'level' => 8, 'vocation_id' => 3, 'health' => 185, 'healthmax' => 185, 'experience' => 4200, 'looktype' => 129, 'mana' => 90, 'manamax' => 90, 'soul' => 100, 'cap' => 470));
 insert_sample_if_not_exist(array('name' => 'Knight Sample', 'level' => 8, 'vocation_id' => 4, 'health' => 185, 'healthmax' => 185, 'experience' => 4200, 'looktype' => 131, 'mana' => 90, 'manamax' => 90, 'soul' => 100, 'cap' => 470));
+insert_sample_if_not_exist(array('name' => 'Monk Sample', 'level' => 8, 'vocation_id' => 9, 'health' => 185, 'healthmax' => 185, 'experience' => 4200, 'looktype' => 131, 'mana' => 90, 'manamax' => 90, 'soul' => 100, 'cap' => 470));
 
 if($success) {
 	success($locale['step_database_imported_players']);

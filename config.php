@@ -37,7 +37,7 @@ $config = array(
 
 	// what client version are you using on this OT?
 	// used for the Downloads page and some templates as well
-    'client' => 1405, // 1405 = client 14.05
+    'client' => 1500, // 1500 = client 15.00
 
 	'session_prefix' => 'myaac_', // must be unique for every site on your server
 	'friendly_urls' => false, // mod_rewrite is required for this, it makes links looks more elegant to eye, and also are SEO friendly (example: https://localhost/guilds/Testing instead of https://localhost?subtopic=guilds&name=Testing). Remember to rename .htaccess.dist to .htaccess
