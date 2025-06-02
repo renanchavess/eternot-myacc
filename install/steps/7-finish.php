@@ -44,7 +44,7 @@ else {
 		}
 
 		$groups = new OTS_Groups_List();
-		$player_used->setGroupId($groups->getHighestId());
+		$player_used->setGroupId($groups->getGodGroup());
 
 		$email = $_SESSION['var_email'];
 		if($account_db->isLoaded()) {
@@ -80,7 +80,7 @@ else {
 		$account_used->setCustomField('web_flags', FLAG_ADMIN + FLAG_SUPER_ADMIN);
 		$account_used->setCustomField('country', 'us');
 		if($db->hasColumn('accounts', 'group_id'))
-			$account_used->setCustomField('group_id', $groups->getHighestId());
+			$account_used->setCustomField('group_id', $groups->getGodGroup());
 		if($db->hasColumn('accounts', 'type'))
 			$account_used->setCustomField('type', 6);
 
