@@ -281,7 +281,7 @@ else if ($id > 0 && isset($account) && $account->isLoaded()) {
                         $acc_group = $account->getAccGroupId();
                         if ($hasTypeColumn) {
                             $groups = new OTS_Groups_List();
-                            $acc_type = ($groups->getGodGroup() == 6)
+                            $acc_type = ($groups->getHighestId() == 6)
                                 ? ["Normal", "Tutor", "Senior Tutor", "Gamemaster", "Community Manager", "God"]
                                 : ["Normal", "Tutor", "Senior Tutor", "Gamemaster", "God"];
                             ?>
