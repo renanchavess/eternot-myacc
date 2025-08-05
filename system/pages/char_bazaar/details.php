@@ -32,7 +32,7 @@ $BlessTwist = ($character['blessings8'] >= 1) ? 'yes' : 'no';
 /* GET BLESS END */
 
 /* GET CHARM CHARACTER */
-$getCharm = $db->query("SELECT `player_guid`, `charm_points`, `charm_expansion`, `rune_wound`, `rune_enflame`, `rune_poison`, `rune_freeze`, `rune_zap`, `rune_curse`, `rune_cripple`, `rune_parry`, `rune_dodge`, `rune_adrenaline`, `rune_numb`, `rune_cleanse`, `rune_bless`, `rune_scavenge`, `rune_gut`, `rune_low_blow`, `rune_divine`, `rune_vamp`, `rune_void`, `UsedRunesBit` FROM `player_charms` WHERE `player_guid` = {$getAuction['player_id']}");
+$getCharm = $db->query("SELECT `player_id`, `charm_points`, `UsedRunesBit` FROM `player_charms` WHERE `player_id` = {$getAuction['player_id']}");
 $getCharm = $getCharm->fetch();
 
 $Charm_Points = $getCharm['charm_points'] ?? '0';
@@ -108,6 +108,13 @@ if (!$character_voc) {
             }
             $character_voc .= 'Knight';
             break;
+        case 9:
+        case 10:
+            if ($vocationId == 10) {
+                $character_voc = 'Exatled ';
+            }
+            $character_voc .= 'Monk';
+            break;
     }
 }
 /* CONVERT VOCATION END */
@@ -138,7 +145,7 @@ $getAuctionBid = $db->query("SELECT `account_id`, `auction_id`, `bid`, `date` FR
 $getAuctionBid = $getAuctionBid->fetch();
 
 $My_Bid = '<img src="' . $template_path . '/images/premiumfeatures/icon_no.png">';
-if ($logged && isset($getAuctionBid['account_id']) && $account_logged == $getAuctionBid['account_id']) {
+if ($logged && isset($getAuctionBid['account_id']) && $account_logged->getId() == $getAuctionBid['account_id']) {
     $val = number_format($getAuctionBid['bid'], 0, ',', ',');
     $My_Bid = "<b>{$val}</b> <img src='{$template_path}/images/account/icon-tibiacointrusted.png' class='VSCCoinImages' title='Transferable Tibia Coins'>";
 }
@@ -274,7 +281,7 @@ $End = date('Y-m-d H:i:s', strtotime($getAuction['date_end']));
                                                                             title="Transferable Tibia Coins"></div>
                                                                 </div>
                                                             <?php } ?>
-                                                            <?php if ($logged && isset($getAuctionBid['account_id']) && $account_logged == $getAuctionBid['account_id']) { ?>
+                                                            <?php if ($logged && isset($getAuctionBid['account_id']) && $account_logged->getId() == $getAuctionBid['account_id']) { ?>
                                                                 <div class="ShortAuctionDataBidRow"
                                                                      style="background-color: #d4c0a1; padding: 5px; border: 1px solid #f0e8da; box-shadow: 2px 2px 5px 0 rgb(0 0 0 / 50%);">
                                                                     <div class="ShortAuctionDataLabel">My Bid:</div>
@@ -284,7 +291,7 @@ $End = date('Y-m-d H:i:s', strtotime($getAuction['date_end']));
                                                             <?php } ?>
                                                         </div>
                                                         <?php if ($logged && $getAuction['status'] == 0) { ?>
-                                                            <?php if (strtotime($End) > strtotime($Hoje) && $account_logged != $getAuction['account_old']) { ?>
+                                                            <?php if (strtotime($End) > strtotime($Hoje) && $account_logged->getId() != $getAuction['account_old']) { ?>
                                                                 <div class="AuctionBodyBlock CurrentBid">
                                                                     <div class="Container">
                                                                         <div class="MyMaxBidLabel">My Bid Limit
@@ -313,7 +320,7 @@ $End = date('Y-m-d H:i:s', strtotime($getAuction['date_end']));
                                                                     </div>
                                                                 </div>
                                                             <?php } ?>
-                                                            <?php if (strtotime($End) > strtotime($Hoje) && $account_logged == $getAuction['account_old']) { ?>
+                                                            <?php if (strtotime($End) > strtotime($Hoje) && $account_logged->getId() == $getAuction['account_old']) { ?>
                                                                 <div class="AuctionBodyBlock CurrentBid">
                                                                     <div class="Container">
                                                                         <div class="MyMaxBidLabel"
@@ -323,8 +330,8 @@ $End = date('Y-m-d H:i:s', strtotime($getAuction['date_end']));
                                                                 </div>
                                                             <?php } ?>
                                                             <?php if (strtotime($End) < strtotime($Hoje) && (
-                                                                    ($account_logged == $getAuction['account_old'] && $account_logged != $getAuction['bid_account']) ||
-                                                                    ($account_logged != $getAuction['account_old'] && $account_logged == $getAuction['bid_account'])
+                                                                    ($account_logged->getId() == $getAuction['account_old'] && $account_logged->getId() != $getAuction['bid_account']) ||
+                                                                    ($account_logged->getId() != $getAuction['account_old'] && $account_logged->getId() == $getAuction['bid_account'])
                                                                 )) { ?>
                                                                 <div class="AuctionBodyBlock CurrentBid">
                                                                     <div class="Container">
@@ -353,7 +360,7 @@ $End = date('Y-m-d H:i:s', strtotime($getAuction['date_end']));
                                                                     </div>
                                                                 </div>
                                                             <?php } ?>
-                                                            <?php if (strtotime($End) < strtotime($Hoje) && $account_logged != $getAuction['account_old'] && $account_logged != $getAuction['bid_account']) { ?>
+                                                            <?php if (strtotime($End) < strtotime($Hoje) && $account_logged->getId() != $getAuction['account_old'] && $account_logged->getId() != $getAuction['bid_account']) { ?>
                                                                 <div class="AuctionBodyBlock CurrentBid">
                                                                     <div class="Container">
                                                                         <div class="MyMaxBidLabel"

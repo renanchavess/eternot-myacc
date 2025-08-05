@@ -69,14 +69,21 @@ foreach ($auctions as $auction) { /* LOOP AUCTIONS */
                 $character_voc .= 'Paladin';
                 break;
             case 4:
-            case 8:
-                if ($vocationId == 8) {
-                    $character_voc = 'Elite ';
-                }
-                $character_voc .= 'Knight';
-                break;
-        }
+        case 8:
+            if ($vocationId == 8) {
+                $character_voc = 'Elite ';
+            }
+            $character_voc .= 'Knight';
+            break;
+        case 9:
+        case 10:
+            if ($vocationId == 10) {
+                $character_voc = 'Exatled ';
+            }
+            $character_voc .= 'Monk';
+            break;
     }
+}
     /* CONVERT VOCATION END */
 
     /* GET BID */
@@ -86,7 +93,7 @@ foreach ($auctions as $auction) { /* LOOP AUCTIONS */
 
     /* GET MY BID */
     $My_Bid = "<img src='$template_path/images/premiumfeatures/icon_no.png'>";
-    if ($logged && isset($getAuctionBid['account_id']) && $account_logged == $getAuctionBid['account_id']) {
+    if ($logged && isset($getAuctionBid['account_id']) && $account_logged->getId() == $getAuctionBid['account_id']) {
         $val = number_format($getAuctionBid['bid'], 0, ',', ',');
         $My_Bid = "<b>{$val}</b> <img src='{$template_path}/images/account/icon-tibiacointrusted.png' class='VSCCoinImages' title='Transferable Tibia Coins'>";
     }
@@ -207,7 +214,7 @@ foreach ($auctions as $auction) { /* LOOP AUCTIONS */
                                                 </div>
                                             </div>
                                         <?php }
-                                        if ($logged && isset($getAuctionBid['account_id']) && $account_logged == $getAuctionBid['account_id']) { ?>
+                                        if ($logged && isset($getAuctionBid['account_id']) && $account_logged->getId() == $getAuctionBid['account_id']) { ?>
                                             <div class="ShortAuctionDataBidRow"
                                                  style="background-color: #d4c0a1; padding: 5px; border: 1px solid #f0e8da; box-shadow: 2px 2px 5px 0 rgb(0 0 0 / 50%);">
                                                 <div class="ShortAuctionDataLabel">My Bid:</div>
@@ -219,7 +226,7 @@ foreach ($auctions as $auction) { /* LOOP AUCTIONS */
                                     if ($subtopic == 'pastcharactertrades' && strtotime($Hoje) >= strtotime($End)) { ?>
                                         <div class="AuctionBodyBlock CurrentBid">
                                             <div class="Container">
-                                                <?php if ($logged && $auction['account_old'] == $account_logged) { ?> <!-- VERIFY MY AUCTION -->
+                                                <?php if ($logged && $auction['account_old'] == $account_logged->getId()) { ?> <!-- VERIFY MY AUCTION -->
                                                     <div class="MyMaxBidLabel" style="font-weight: normal;">
                                                         My auction.
                                                     </div>
@@ -231,7 +238,7 @@ foreach ($auctions as $auction) { /* LOOP AUCTIONS */
                                         </div>
                                     <?php } else if ($subtopic == 'currentcharactertrades') { ?>
                                         <?php if ($logged) { ?> <!-- LOGGED -->
-                                            <?php if ($auction['account_old'] != $account_logged) { ?>
+                                            <?php if ($auction['account_old'] != $account_logged->getId()) { ?>
                                                 <div class="AuctionBodyBlock CurrentBid">
                                                     <div class="Container">
                                                         <div class="MyMaxBidLabel">My Bid Limit</div>

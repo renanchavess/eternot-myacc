@@ -30,13 +30,24 @@ if (!array_search(strtolower($vocation), $normalized_vocations)) $vocation = "No
 if ($config['highscores_vocation_box'] && isset($vocation)) {
     foreach ($config['vocations'] as $id => $name) {
         if (strtolower($name) == $vocation) {
-            $add_vocs = array($id);
+            $add_vocs = [$id];
 
-            $i = $id + $config['vocations_amount'];
-            while (isset($config['vocations'][$i])) {
-                $add_vocs[] = $i;
-                $i += $config['vocations_amount'];
-            }
+    // Force include promoted Exalted Monk if base is Monk
+    if ($id == 9) {
+        $add_vocs[] = 10;
+    }
+    $promotion_map = [
+    1 => [5],      // Sorcerer ? Master Sorcerer
+    2 => [6],      // Druid ? Elder Druid
+    3 => [7],      // Paladin ? Royal Paladin
+    4 => [8],      // Knight ? Elite Knight
+    9 => [10],     // Monk ? Exalted Monk
+];
+
+$add_vocs = [$id];
+if (isset($promotion_map[$id])) {
+    $add_vocs = array_merge($add_vocs, $promotion_map[$id]);
+}
 
             $add_sql = 'AND `vocation` IN (' . implode(', ', $add_vocs) . ')';
             break;

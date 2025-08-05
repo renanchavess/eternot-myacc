@@ -46,6 +46,10 @@ if (!empty($_POST['auction_price']) && !empty($_POST['auction_days'])) {
         $character_voc = 'Royal Paladin';
     } elseif ($getCharacter['vocation'] == 8) {
         $character_voc = 'Elite Knight';
+    } elseif ($getCharacter['vocation'] == 9) {
+        $character_voc = 'Monk';
+    } elseif ($getCharacter['vocation'] == 10) {
+        $character_voc = 'Exatled Monk';
     } else {
         $character_voc = 'None';
     }

@@ -33,7 +33,7 @@ $config = array(
 	'template' => 'tibiacom', // template used by website (kathrine, tibiacom)
 	'template_allow_change' => false, // allow users to choose their own template while browsing website?
 
-	'vocations_amount' => 4, // how much basic vocations your server got (without promotion)
+	'vocations_amount' => 5, // how much basic vocations your server got (without promotion)
 
 	// what client version are you using on this OT?
 	// used for the Downloads page and some templates as well
@@ -66,7 +66,7 @@ $config = array(
 	// cache system. by default file cache is used
 	'cache_engine' => 'auto', // apc, apcu, eaccelerator, xcache, file, auto, or blank to disable.
 	'cache_prefix' => 'myaac_', // have to be unique if running more MyAAC instances on the same server (except file system cache)
-
+	
 	// database details (leave blank for auto detect from config.lua)
 	'database_host' => '',
 	'database_port' => '', // leave blank to default 3306
@@ -159,7 +159,7 @@ $config = array(
 	// genders (aka sex)
 	'genders' => array(
 		0 => 'Female',
-		1 => 'Male'
+		1 => 'Male',
 	),
 
 	// vocations
@@ -174,7 +174,7 @@ $config = array(
 		7 => 'Royal Paladin',
 		8 => 'Elite Knight',
 		9 => 'Monk',
-		10 => 'Exhalted Monk',
+		10 => 'Exalted Monk',
 	),
 
 	// new character config
@@ -186,6 +186,7 @@ $config = array(
 		4 => 'Knight Sample',
 		9 => 'Monk Sample',
 	),
+
 
     'use_character_sample_skills' => false,
 

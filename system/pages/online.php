@@ -119,7 +119,7 @@ $twig->display('online.html.twig', array(
 	'players' => $players_data,
 	'record' => $record,
 	'current_date' => date('d/m/Y'),
-	'vocs' => $vocs,
+	'vocs' => isset($vocs) ? $vocs : [],
 ));
 
 //search bar
