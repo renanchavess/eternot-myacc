@@ -161,18 +161,6 @@ class OTS_Groups_List implements IteratorAggregate, Countable
 		return $group_id;
 	}
 
-	public function getGodGroup()
-	{
-		$group_id = 6;
-		foreach ($this->groups as $id => $group) {
-			if ($id == $group_id) {
-				return $group;
-			}
-		}
-		
-		return null;
-	}
-
 /**
  * Returns string representation of object.
  *
