@@ -10,9 +10,9 @@ defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Version check';
 
 // fetch version
-$myaac_version = trim(@file_get_contents('https://github.com/jprzimba/crystalserver-aac/raw/main/VERSION'));
+$myaac_version = trim(@file_get_contents('https://raw.githubusercontent.com/zimbadev/crystalserver-myacc/refs/heads/main/VERSION'));
 if (!$myaac_version) {
-    warning('Error while fetching version info from https://github.com/jprzimba/crystalserver-aac<br/>
+    warning('Error while fetching version info from https://github.com/zimbadev/crystalserver-aac<br/>
 	Please try again later.');
     return;
 }
@@ -29,5 +29,5 @@ if ($version_compare == 0) {
     warning('You\'re using outdated version.<br/>
 		Your version: <b>' . MYAAC_VERSION . '</b><br/>
 		Latest version: <b>' . $myaac_version . '</b><br/>
-		Download available at: <a href="https://github.com/jprzimba/crystalserver-aac" target="_blank">github.com/jprzimba/crystalserver-aac</a>');
+		Download available at: <a href="https://github.com/zimbadev/crystalserver-aac" target="_blank">github.com/zimbadev/crystalserver-aac</a>');
 }
