@@ -16,7 +16,34 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
     if ($idLogged == $getCharacter['account_id']) {
         $next_truecount++;
     } else {
-        header('Location: index.php?news');
+        echo <<<HTML
+            <div class="SmallBox">
+                <div class="MessageContainer">
+                    <div class="BoxFrameHorizontal" style="background-image:url(templates/tibiacom/images/global/content/box-frame-horizontal.gif);"></div>
+                    <div class="BoxFrameEdgeLeftTop" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                    <div class="BoxFrameEdgeRightTop" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                    <div class="Message">
+                    <div class="BoxFrameVerticalLeft" style="background-image:url(templates/tibiacom/images/global/content/box-frame-vertical.gif);"></div>
+                    <div class="BoxFrameVerticalRight" style="background-image:url(templates/tibiacom/images/global/content/box-frame-vertical.gif);"></div>
+                    <table class="HintBox">
+                        <tbody>
+                        <tr>
+                        <td>
+                            <p style="color: #b32d2d; font-weight: bold; text-align: center; margin: 0;">
+                            You can only create auctions for your characters.            </p>
+                        </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <div class="BoxFrameHorizontal" style="background-image:url(templates/tibiacom/images/global/content/box-frame-horizontal.gif);"></div>
+                    <div class="BoxFrameEdgeRightBottom" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                    <div class="BoxFrameEdgeLeftBottom" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                </div>
+            </div>
+            <br>
+        HTML;
+        return;
     }
     /* VERIFICA CONTA */
 

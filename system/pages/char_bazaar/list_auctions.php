@@ -1,6 +1,6 @@
 <?php
 if (!$auctions || !isset($auctions)) {
-    $auctions = [];
+    $auctions = []; 
 }
 
 foreach ($auctions as $auction) { /* LOOP AUCTIONS */
@@ -78,7 +78,7 @@ foreach ($auctions as $auction) { /* LOOP AUCTIONS */
         case 9:
         case 10:
             if ($vocationId == 10) {
-                $character_voc = 'Exatled ';
+                $character_voc = 'Exalted ';
             }
             $character_voc .= 'Monk';
             break;
@@ -87,13 +87,16 @@ foreach ($auctions as $auction) { /* LOOP AUCTIONS */
     /* CONVERT VOCATION END */
 
     /* GET BID */
-    $getAuctionBid = $db->query("SELECT `account_id`, `auction_id`, `bid`, `date` FROM `myaac_charbazaar_bid` WHERE `auction_id` = {$auction['id']}");
+    $getAuctionBid = null;
+    if ($logged) {
+    $getAuctionBid = $db->query("SELECT `account_id`, `auction_id`, `bid`, `date` FROM `myaac_charbazaar_bid` WHERE `auction_id` = {$auction['id']} AND `account_id` = {$account_logged->getId()} ORDER BY `bid` DESC");
     $getAuctionBid = $getAuctionBid->fetch();
+    }
     /* GET BID END */
 
     /* GET MY BID */
     $My_Bid = "<img src='$template_path/images/premiumfeatures/icon_no.png'>";
-    if ($logged && isset($getAuctionBid['account_id']) && $account_logged->getId() == $getAuctionBid['account_id']) {
+    if ($logged && isset($getAuctionBid['account_id'])) {
         $val = number_format($getAuctionBid['bid'], 0, ',', ',');
         $My_Bid = "<b>{$val}</b> <img src='{$template_path}/images/account/icon-tibiacointrusted.png' class='VSCCoinImages' title='Transferable Tibia Coins'>";
     }
@@ -214,7 +217,7 @@ foreach ($auctions as $auction) { /* LOOP AUCTIONS */
                                                 </div>
                                             </div>
                                         <?php }
-                                        if ($logged && isset($getAuctionBid['account_id']) && $account_logged->getId() == $getAuctionBid['account_id']) { ?>
+                                        if ($logged && isset($getAuctionBid['account_id'])) { ?>
                                             <div class="ShortAuctionDataBidRow"
                                                  style="background-color: #d4c0a1; padding: 5px; border: 1px solid #f0e8da; box-shadow: 2px 2px 5px 0 rgb(0 0 0 / 50%);">
                                                 <div class="ShortAuctionDataLabel">My Bid:</div>
@@ -231,9 +234,15 @@ foreach ($auctions as $auction) { /* LOOP AUCTIONS */
                                                         My auction.
                                                     </div>
                                                 <?php } ?> <!-- VERIFY MY AUCTION END -->
+                                                <?php if ($auction['status'] == 2) { ?>
+                                                <div class="MyMaxBidLabel" style="font-weight: bold; color: #ff8c00;">
+                                                    cancelled
+                                                </div>
+                                                <?php } else { ?>
                                                 <div class="MyMaxBidLabel" style="font-weight: bold; color: green;">
                                                     finished
                                                 </div>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                     <?php } else if ($subtopic == 'currentcharactertrades') { ?>
@@ -241,17 +250,17 @@ foreach ($auctions as $auction) { /* LOOP AUCTIONS */
                                             <?php if ($auction['account_old'] != $account_logged->getId()) { ?>
                                                 <div class="AuctionBodyBlock CurrentBid">
                                                     <div class="Container">
-                                                        <div class="MyMaxBidLabel">My Bid Limit</div>
+                                                        <div class="MyMaxBidLabel"></div>
                                                         <form
-                                                            action="?subtopic=<?= $subtopic ?>&action=bid"
-                                                            method="post">
+                                                            action="?subtopic=<?= $subtopic ?>&details=<?= $auction['id'] ?>"
+                                                            method="post"> 
                                                             <input type="hidden"
                                                                    name="auction_iden"
                                                                    value="<?= $auction['id'] ?>">
-                                                            <input class="MyMaxBidInput"
+                                                            <!-- <input class="MyMaxBidInput"
                                                                    type="number"
                                                                    name="maxbid"
-                                                                   min="<?= $auction['price'] ?>">
+                                                                   min="<?= $auction['price'] ?>"> -->
                                                             <div class="BigButton"
                                                                  style="background-image:url(<?= $template_path; ?>/images/global/buttons/sbutton_green.gif)">
                                                                 <div
@@ -264,7 +273,7 @@ foreach ($auctions as $auction) { /* LOOP AUCTIONS */
                                                                         name="auction_confirm"
                                                                         class="BigButtonText"
                                                                         type="submit"
-                                                                        value="Bid On Auction">
+                                                                        value="View Details">
                                                                 </div>
                                                             </div>
                                                         </form>

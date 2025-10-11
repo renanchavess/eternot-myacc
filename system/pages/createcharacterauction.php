@@ -30,6 +30,11 @@
 defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Create Auction';
 
+// // =====================================================
+// // EXECUTA O PROCESSAMENTO SEMIAUTOMÁTICO DO BAZAAR
+require SYSTEM . 'pages/char_bazaar/semifinishauction.php';
+// // =====================================================
+
 if ($logged) {
     require SYSTEM . 'pages/char_bazaar/coins_balance.php';
 } else {
@@ -88,9 +93,43 @@ if ($getAuctionStep == 4) {
 if ($getAuctionStep == '5') {
     /* CADASTRAR AUCTION */
     if (isset($_POST['auction_confirm']) && isset($_POST['auction_price']) && isset($_POST['auction_days']) && isset($_POST['auction_character'])) {
-        $auction_price = $_POST['auction_price'];
-        $auction_days = $_POST['auction_days'];
+        $idLogged = $account_logged->getId(); // Para uso na validação de personagem
+        $auction_price =  $_POST['auction_price'];
+        $auction_days =  $_POST['auction_days'];
         $auction_character = $_POST['auction_character'];
+
+        // Validação: verifica se o preço e a data estão dentro dos limites
+         if ( !is_numeric($auction_price) || !is_numeric($auction_days) || !is_numeric($auction_character) ||
+         (int)$auction_price < 1 || (int)$auction_days < 1 || (int)$auction_days > 28) {
+            echo <<<HTML
+            <div class="SmallBox">
+                <div class="MessageContainer">
+                    <div class="BoxFrameHorizontal" style="background-image:url(templates/tibiacom/images/global/content/box-frame-horizontal.gif);"></div>
+                    <div class="BoxFrameEdgeLeftTop" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                    <div class="BoxFrameEdgeRightTop" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                    <div class="Message">
+                    <div class="BoxFrameVerticalLeft" style="background-image:url(templates/tibiacom/images/global/content/box-frame-vertical.gif);"></div>
+                    <div class="BoxFrameVerticalRight" style="background-image:url(templates/tibiacom/images/global/content/box-frame-vertical.gif);"></div>
+                    <table class="HintBox">
+                        <tbody>
+                        <tr>
+                        <td>
+                            <p style="color: #b32d2d; font-weight: bold; text-align: center; margin: 0;">
+                            You must set a valid value for the auction date and price.            </p>
+                        </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <div class="BoxFrameHorizontal" style="background-image:url(templates/tibiacom/images/global/content/box-frame-horizontal.gif);"></div>
+                    <div class="BoxFrameEdgeRightBottom" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                    <div class="BoxFrameEdgeLeftBottom" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                </div>
+            </div>
+            <br>
+            HTML;
+            return;
+        }
 
         /* UPDATE CHARACTER TO NEW ACCOUNT */
         /*$update_character = $db->query('UPDATE `players` SET `account_id` = `1` WHERE `id` = ' . $auction_character .'');
@@ -100,6 +139,38 @@ if ($getAuctionStep == '5') {
         /* REGISTER AUCTION */
         $getCharacter = $db->query('SELECT `id`, `account_id` FROM `players` WHERE `id` = ' . $db->quote($auction_character) . '');
         $getCharacter = $getCharacter->fetch();
+
+        // Validação: verifica se a conta logada possui o personagem
+        if ($idLogged != $getCharacter['account_id']) {
+            echo <<<HTML
+            <div class="SmallBox">
+                <div class="MessageContainer">
+                    <div class="BoxFrameHorizontal" style="background-image:url(templates/tibiacom/images/global/content/box-frame-horizontal.gif);"></div>
+                    <div class="BoxFrameEdgeLeftTop" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                    <div class="BoxFrameEdgeRightTop" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                    <div class="Message">
+                    <div class="BoxFrameVerticalLeft" style="background-image:url(templates/tibiacom/images/global/content/box-frame-vertical.gif);"></div>
+                    <div class="BoxFrameVerticalRight" style="background-image:url(templates/tibiacom/images/global/content/box-frame-vertical.gif);"></div>
+                    <table class="HintBox">
+                        <tbody>
+                        <tr>
+                        <td>
+                            <p style="color: #b32d2d; font-weight: bold; text-align: center; margin: 0;">
+                            You can only create auctions for your characters.            </p>
+                        </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <div class="BoxFrameHorizontal" style="background-image:url(templates/tibiacom/images/global/content/box-frame-horizontal.gif);"></div>
+                    <div class="BoxFrameEdgeRightBottom" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                    <div class="BoxFrameEdgeLeftBottom" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                </div>
+            </div>
+            <br>
+            HTML;
+            return;
+        }
 
         $getAccount = $db->query('SELECT `id`, `premdays`, `coins_transferable` FROM `accounts` WHERE `id` = ' . $db->quote($getCharacter['account_id']) . '');
         $getAccount = $getAccount->fetch();
@@ -127,8 +198,14 @@ if ($getAuctionStep == '5') {
         $charbazaar_mycoins_calc = $charbazaar_mycoins - $charbazaar_create;
 
         $auctionId = 0;
+
+        // Começa como zero e é definida como 1 se houver moedas suficientes
+        // Essa variável controla a renderização da página de sucesso logo abaixo
+        $auctionSucesso = 0;
+
         if ($getCoinsAccountLogged['coins_transferable'] > $charbazaar_create) {
 
+            $auctionSucesso = 1;
             $update_accountcoins = $db->exec('UPDATE `accounts` SET `coins_transferable` = ' . $charbazaar_mycoins_calc . ' WHERE `id` = ' . $getAccount['id'] . '');
 
             $insert_auction = $db->exec('INSERT INTO `myaac_charbazaar` 
@@ -142,9 +219,7 @@ VALUES (' . $db->quote($account_old) . ', ' . $db->quote($account_new) . ', ' . 
 
             $update_character = $db->exec('UPDATE `players` SET `account_id` = ' . $account_new . ' WHERE `id` = ' . $getCharacter['id'] . '');
 
-        }
-        /* REGISTER AUCTION END */
-        ?>
+            ?>
         <div class="TableContainer">
             <div class="CaptionContainer">
                 <div class="CaptionInnerContainer">
@@ -212,6 +287,79 @@ VALUES (' . $db->quote($account_old) . ', ' . $db->quote($account_new) . ', ' . 
             </table>
         </div>
         <?php
+        }
+
+        // Página de aviso de erro na criação do bazar
+        else {
+            $auctionSucesso = 0;
+        ?>
+        <div class="TableContainer">
+            <div class="CaptionContainer">
+                <div class="CaptionInnerContainer">
+                    <span class="CaptionEdgeLeftTop"
+                          style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></span>
+                    <span class="CaptionEdgeRightTop"
+                          style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></span>
+                    <span class="CaptionBorderTop"
+                          style="background-image:url(<?= $template_path; ?>/images/global/content/table-headline-border.gif);"></span>
+                    <span class="CaptionVerticalLeft"
+                          style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-vertical.gif);"></span>
+                    <div class="Text">Atenção!</div>
+                    <span class="CaptionVerticalRight"
+                          style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-vertical.gif);"></span>
+                    <span class="CaptionBorderBottom"
+                          style="background-image:url(<?= $template_path; ?>/images/global/content/table-headline-border.gif);"></span>
+                    <span class="CaptionEdgeLeftBottom"
+                          style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></span>
+                    <span class="CaptionEdgeRightBottom"
+                          style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></span>
+                </div>
+            </div>
+            <table class="Table5" cellspacing="0" cellpadding="0">
+                <tbody>
+                <tr>
+                    <td>
+                        <div class="InnerTableContainer">
+                            <table style="width:100%;">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="TableContentContainer">
+                                            <table class="TableContent" style="border:1px solid #faf0d7;" width="100%">
+                                                <tbody>
+                                                <tr>
+                                                    <td style="font-weight:normal;"><img
+                                                            src="<?= $template_path; ?>/images/charactertrade/nocoins.gif">
+                                                    </td>
+                                                    <td style="font-weight:bold; font-size: 24px;">Coins Insuficientes!</td>
+                                                    <td>
+                                                    <a href="?subtopic=createcharacterauction&step=1">
+                                                        <div class="BigButton"
+                                                            style="background-image:url(<?= $template_path; ?>/images/global/buttons/sbutton.gif)">
+                                                            <div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);">
+                                                                <div class="BigButtonOver"
+                                                                    style="background-image: url(<?= $template_path; ?>/images/global/buttons/sbutton_over.gif); visibility: hidden;"></div>
+                                                                <input class="BigButtonText" type="button" value="Back">
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <?php
+        }
     }
     /* CADASTRAR AUCTION END */
 }

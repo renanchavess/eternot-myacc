@@ -11,11 +11,19 @@ if ($logged) {
 } else {
     $account_logged = null;
 }
+
+// // =====================================================
+// // EXECUTA O PROCESSAMENTO SEMIAUTOMÁTICO DO BAZAAR
+require SYSTEM . 'pages/char_bazaar/semifinishauction.php';
+// // =====================================================
+
 $subtopic = $_GET['subtopic'] ?? null;
 $getPageDetails = $_GET['details'] ?? null;
 $getPageAction = $_GET['action'] ?? null;
+
 if (empty($getPageDetails) && empty($getPageAction)) {
-    if (!$logged) { ?>
+    if (!$logged) { 
+        ?>
         <div class="SmallBox">
             <div class="MessageContainer">
                 <div class="BoxFrameHorizontal"
@@ -34,7 +42,7 @@ if (empty($getPageDetails) && empty($getPageAction)) {
                         <tr>
                             <td>
                                 <div style="float: right;">
-                                    <a href="?account/manage" target="_blank">
+                                    <a href="?account/manage" target="_self" rel="noreferrer">
                                         <div class="BigButton"
                                              style="background-image:url(<?= $template_path; ?>/images/global/buttons/sbutton.gif)">
                                             <div onmouseover="MouseOverBigButton(this);"
@@ -63,8 +71,43 @@ if (empty($getPageDetails) && empty($getPageAction)) {
             </div>
         </div>
         <br>
-    <?php } ?>
-
+        <?php } else {
+                    ?>
+        <div class="SmallBox">
+            <div class="MessageContainer">
+                <div class="BoxFrameHorizontal"
+                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-horizontal.gif);"></div>
+                <div class="BoxFrameEdgeLeftTop"
+                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></div>
+                <div class="BoxFrameEdgeRightTop"
+                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></div>
+                <div class="Message">
+                    <div class="BoxFrameVerticalLeft"
+                         style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-vertical.gif);"></div>
+                    <div class="BoxFrameVerticalRight"
+                         style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-vertical.gif);"></div>
+                    <table style="width: 100%;">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <p>Below you find all characters which have been <b>auctioned in the last 30 days.</b></p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="BoxFrameHorizontal"
+                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-horizontal.gif);"></div>
+                <div class="BoxFrameEdgeRightBottom"
+                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></div>
+                <div class="BoxFrameEdgeLeftBottom"
+                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></div>
+            </div>
+        </div>
+        <br>
+        <?php
+    } 
+    ?>
     <div class="TableContainer">
         <div class="CaptionContainer">
             <div class="CaptionInnerContainer">

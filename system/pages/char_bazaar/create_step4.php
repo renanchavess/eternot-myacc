@@ -9,6 +9,39 @@ if (!empty($_POST['auction_price']) && !empty($_POST['auction_days'])) {
     $getCharacter = $getCharacter->fetch();
     /* PLAYERS END */
 
+    /* VALIDAÇÃO CHARACTER */
+    $idLogged = $account_logged->getCustomField('id');
+    if ($idLogged != $getCharacter['account_id']) {
+        echo <<<HTML
+            <div class="SmallBox">
+                <div class="MessageContainer">
+                    <div class="BoxFrameHorizontal" style="background-image:url(templates/tibiacom/images/global/content/box-frame-horizontal.gif);"></div>
+                    <div class="BoxFrameEdgeLeftTop" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                    <div class="BoxFrameEdgeRightTop" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                    <div class="Message">
+                    <div class="BoxFrameVerticalLeft" style="background-image:url(templates/tibiacom/images/global/content/box-frame-vertical.gif);"></div>
+                    <div class="BoxFrameVerticalRight" style="background-image:url(templates/tibiacom/images/global/content/box-frame-vertical.gif);"></div>
+                    <table class="HintBox">
+                        <tbody>
+                        <tr>
+                        <td>
+                            <p style="color: #b32d2d; font-weight: bold; text-align: center; margin: 0;">
+                            You can only create auctions for your characters.            </p>
+                        </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <div class="BoxFrameHorizontal" style="background-image:url(templates/tibiacom/images/global/content/box-frame-horizontal.gif);"></div>
+                    <div class="BoxFrameEdgeRightBottom" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                    <div class="BoxFrameEdgeLeftBottom" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                </div>
+            </div>
+            <br>
+        HTML;
+        return;
+    }
+    /* VALIDAÇÃO CHARACTER END*/
 
     /* ACCOUNT BY PLAYER */
     $getAccount = $db->query('SELECT `id`, `premdays`,  `coins`, `coins_transferable`' . 'FROM `accounts`' . 'WHERE `id` = ' . $getCharacter['account_id'] . '');
@@ -49,7 +82,7 @@ if (!empty($_POST['auction_price']) && !empty($_POST['auction_days'])) {
     } elseif ($getCharacter['vocation'] == 9) {
         $character_voc = 'Monk';
     } elseif ($getCharacter['vocation'] == 10) {
-        $character_voc = 'Exatled Monk';
+        $character_voc = 'Exalted Monk';
     } else {
         $character_voc = 'None';
     }

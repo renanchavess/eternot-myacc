@@ -8,6 +8,42 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
     $getCharacter = $getCharacter->fetch();
     /* PLAYERS END */
 
+
+    /* VALIDAÇÃO CHARACTER*/
+    $idLogged = $account_logged->getCustomField('id');
+    if ($idLogged != $getCharacter['account_id']) {
+    echo <<<HTML
+            <div class="SmallBox">
+                <div class="MessageContainer">
+                    <div class="BoxFrameHorizontal" style="background-image:url(templates/tibiacom/images/global/content/box-frame-horizontal.gif);"></div>
+                    <div class="BoxFrameEdgeLeftTop" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                    <div class="BoxFrameEdgeRightTop" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                    <div class="Message">
+                    <div class="BoxFrameVerticalLeft" style="background-image:url(templates/tibiacom/images/global/content/box-frame-vertical.gif);"></div>
+                    <div class="BoxFrameVerticalRight" style="background-image:url(templates/tibiacom/images/global/content/box-frame-vertical.gif);"></div>
+                    <table class="HintBox">
+                        <tbody>
+                        <tr>
+                        <td>
+                            <p style="color: #b32d2d; font-weight: bold; text-align: center; margin: 0;">
+                            You can only create auctions for your characters.            </p>
+                        </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <div class="BoxFrameHorizontal" style="background-image:url(templates/tibiacom/images/global/content/box-frame-horizontal.gif);"></div>
+                    <div class="BoxFrameEdgeRightBottom" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                    <div class="BoxFrameEdgeLeftBottom" style="background-image:url(templates/tibiacom/images/global/content/box-frame-edge.gif);"></div>
+                </div>
+            </div>
+            <br>
+    HTML;
+    return;
+    }
+    /* VALIDAÇÃO CHARACTER END
+
+
     /* ACCOUNT BY PLAYER */
     $getAccount = $db->query('SELECT `id`, `premdays`, `coins`, `coins_transferable`' . 'FROM `accounts`' . 'WHERE `id` = ' . $getCharacter['account_id'] . '');
     $getAccount = $getAccount->fetch();
@@ -45,7 +81,7 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
     } elseif ($getCharacter['vocation'] == 9) {
         $character_voc = 'Monk';
   } elseif ($getCharacter['vocation'] == 10) {
-        $character_voc = 'Exatled Monk';
+        $character_voc = 'Exalted Monk';
     } else {
         $character_voc = 'None';
     }
@@ -500,8 +536,8 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
                                                                 </td>
                                                                 <td class="GreedyCell">
                                                                     <input style="width: 100%;" name="auction_price"
-                                                                           type="text" placeholder="in Tibia Coins"
-                                                                           size="15" maxlength="15" autofocus="">
+                                                                           type="number" placeholder="in Tibia Coins"
+                                                                           size="15" min="1" step="1" maxlength="2" autofocus="" required>
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -510,9 +546,9 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
                                                                 </td>
                                                                 <td class="GreedyCell">
                                                                     <input style="width: 100%;" name="auction_days"
-                                                                           type="text"
+                                                                           type="number"
                                                                            placeholder="min 1 day and max 28 days"
-                                                                           size="29" maxlength="2" autofocus="">
+                                                                           size="29" min="1" max="28" maxlength="2" autofocus="" required>
                                                                 </td>
                                                                 <td>
                                                                     <div id="auction_result"></div>
