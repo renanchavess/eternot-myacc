@@ -11,8 +11,9 @@ global $config, $twig, $logged;
  */
 defined('MYAAC') or die('Direct access not allowed!');
 
-require_once(PLUGINS . 'pagseguro/config.php');
-$twig->addGlobal('config', $config);
+// Redireciona para a nova página de doações com Mercado Pago
+header('Location: ' . BASE_URL . 'payments/donate.php');
+exit;
 
 if (!isset($config['pagSeguro']) || !count($config['pagSeguro']) || !count($config['pagSeguro']['donates'])) {
     echo "PagSeguro is disabled. If you're an admin please configure this script in config.local.php.";

@@ -9,8 +9,9 @@ global $config, $twig, $logged;
  */
 defined('MYAAC') or die('Direct access not allowed!');
 
-require_once(PLUGINS . 'pagseguro/config.php');
-$twig->addGlobal('config', $config);
+// Redireciona para a nova página de compra de boxes com Mercado Pago
+header('Location: ' . BASE_URL . 'payments/buybox.php');
+exit;
 
 if (!isset($config['pagSeguro']) || !count($config['pagSeguro']) || !count($config['pagSeguro']['boxes'])) {
     echo "PagSeguro is disabled. If you're an admin please configure this script in config.local.php.";
