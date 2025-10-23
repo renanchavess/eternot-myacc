@@ -20,7 +20,7 @@ $ROOT_BASE_URL = preg_replace('#/payments/$#', '/', BASE_URL);
 // - donates: pacotes com 'name', 'value', 'coins', 'extra', 'description'
 // - boxes: pacotes com 'name', 'value', 'description'
 
-$config['mercadoPago'] = [
+$defaults = [
     // Use a mesma variável para sandbox/production, se não tiver ambas
     'access_token' => [
         'sandbox' => getenv('MERCADO_PAGO_ACCESS_TOKEN') ?: '',
@@ -61,6 +61,9 @@ $config['mercadoPago'] = [
         'box_large'  => [ 'name' => 'Box Grande',   'value' => 30, 'description' => 'Itens raros' ],
     ],
 ];
+
+$existing = (isset($config['mercadoPago']) && is_array($config['mercadoPago'])) ? $config['mercadoPago'] : [];
+$config['mercadoPago'] = array_replace_recursive($defaults, $existing);
 
 // Tentar carregar promoções do banco, se disponíveis
 if (isset($db) && method_exists($db, 'hasTable') && $db->hasTable('mercadopago_settings')) {
