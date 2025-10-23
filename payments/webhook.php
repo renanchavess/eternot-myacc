@@ -10,6 +10,9 @@
 
 // Incluir arquivos necessários
 require_once '../common.php';
+if (!function_exists('config')) {
+    require_once __DIR__ . '/../system/functions.php';
+}
 require_once '../system/init.php';
 require_once '../config.php';
 require_once '../plugins/mercadopago/config.php';
@@ -75,6 +78,10 @@ try {
     // Inicializar SDK do Mercado Pago
     $accessToken = $config['mercadoPago']['access_token'][$config['mercadoPago']['environment']];
     $mp = new MercadoPagoSDK($accessToken, $config['mercadoPago']['environment']);
+    $logger->logDebug('sdk_init', [
+        'env' => $config['mercadoPago']['environment'],
+        'token_prefix' => substr($accessToken, 0, 8)
+    ]);
     
     // Processar notificação
     $notificationType = $data['type'];
@@ -113,7 +120,10 @@ try {
     ]);
     
     http_response_code(500);
-    echo json_encode(['error' => 'Internal server error']);
+    echo json_encode([
+        'error' => 'Internal server error',
+        'message' => $e->getMessage()
+    ]);
 }
 
 /**
