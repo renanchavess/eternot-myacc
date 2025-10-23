@@ -383,7 +383,7 @@ function processDonation($userId, $packageId, $payment, $logger, $config)
     $storeMode = $config['mercadoPago']['storeHistoryMode'] ?? 0;
     // Descrição apresentada ao jogador
     $orderId = $payment['id'] ?? null;
-    $description = 'Coins transferíveis comprados — Pedido #' . ($orderId ?? 'N/A');
+    $description = 'Coins transferíveis comprados';
     
     try {
         $stmt = $db->prepare(
