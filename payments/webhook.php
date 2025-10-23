@@ -380,10 +380,34 @@ function processDonation($userId, $packageId, $payment, $logger, $config)
     // Mapeamento coin_type no protocolo da Store: 0=transferable, 1=normal
     $storeCoinType = 0;
     // Modo: 0=normal, 1=gift (exibe como presente). Default: 1
-    $storeMode = $config['mercadoPago']['storeHistoryMode'] ?? 1;
+    $storeMode = $config['mercadoPago']['storeHistoryMode'] ?? 0;
     // Descrição apresentada ao jogador
     $orderId = $payment['id'] ?? null;
     $description = 'Coins transferíveis comprados — Pedido #' . ($orderId ?? 'N/A');
+    
+    try {
+        $stmt = $db->prepare(
+            "INSERT INTO store_history (account_id, mode, description, coin_type, coin_amount, time, timestamp, coins) VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP(), ?, ?)"
+        );
+        // timestamp e coins adicionais: seguir padrão legado (timestamp=0, coins=0)
+        $stmt->execute([$userId, $storeMode, $description, $storeCoinType, $coins, 0, 0]);
+        $logger->logTransaction('store_history_entry_created', [
+            'account_id' => $userId,
+            'mode' => $storeMode,
+            'coin_type' => $storeCoinType,
+            'coin_amount' => $coins,
+            'description' => $description,
+            'insert_id' => method_exists($db, 'lastInsertId') ? $db->lastInsertId() : null
+        ]);
+    } catch (Exception $e) {
+        // Não interromper o processamento se o histórico falhar; apenas logar o erro
+        $logger->logError('Falha ao inserir store_history: ' . $e->getMessage(), [
+            'account_id' => $userId,
+            'coin_type' => $storeCoinType,
+            'coin_amount' => $coins,
+            'description' => $description
+        ]);
+    }
     
     // Auditoria opcional em coins_transactions (C++)
     if (!empty($config['mercadoPago']['enableCoinsAudit'])) {
@@ -391,13 +415,14 @@ function processDonation($userId, $packageId, $payment, $logger, $config)
         $auditCoinType = 3;
         try {
             $stmt = $db->prepare(
-                "INSERT INTO coins_transactions (account_id, type, coin_type, amount, description) VALUES (?, 1, ?, ?, ?)"
+                "INSERT INTO coins_transactions (account_id, type, coin_type, amount, description, timestamp) VALUES (?, 1, ?, ?, ?, UNIX_TIMESTAMP())"
             );
             $stmt->execute([$userId, $auditCoinType, $coins, 'WEB PURCHASE Pedido #' . ($orderId ?? 'N/A')]);
             $logger->logTransaction('coins_audit_entry_created', [
                 'account_id' => $userId,
                 'coin_type' => $auditCoinType,
-                'amount' => $coins
+                'amount' => $coins,
+                'insert_id' => method_exists($db, 'lastInsertId') ? $db->lastInsertId() : null
             ]);
         } catch (Exception $e) {
             $logger->logError('Falha ao inserir coins_transactions: ' . $e->getMessage(), [
