@@ -80,6 +80,7 @@ plugins/*
 !plugins/email-confirmed-reward
 landing
 !plugins/pagseguro
+!plugins/mercadopago
 
 # others/rest
 system/pages/downloads.php
