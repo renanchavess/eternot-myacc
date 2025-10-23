@@ -76,10 +76,22 @@ try {
     */
     
     // Inicializar SDK do Mercado Pago
-    $accessToken = $config['mercadoPago']['access_token'][$config['mercadoPago']['environment']];
-    $mp = new MercadoPagoSDK($accessToken, $config['mercadoPago']['environment']);
+    $env = $config['mercadoPago']['environment'] ?? 'production';
+    if (!isset($config['mercadoPago']['access_token'][$env])) {
+        $prodToken = $config['mercadoPago']['access_token']['production'] ?? null;
+        $sbxToken = $config['mercadoPago']['access_token']['sandbox'] ?? null;
+        if (is_string($env) && strpos($env, 'APP_USR-') === 0 && $prodToken) {
+            $env = 'production';
+        } elseif (is_string($env) && strpos($env, 'TEST-') === 0 && $sbxToken) {
+            $env = 'sandbox';
+        } else {
+            throw new Exception("Config inválida: environment='$env' sem access_token correspondente");
+        }
+    }
+    $accessToken = $config['mercadoPago']['access_token'][$env];
+    $mp = new MercadoPagoSDK($accessToken, $env);
     $logger->logDebug('sdk_init', [
-        'env' => $config['mercadoPago']['environment'],
+        'env' => $env,
         'token_prefix' => substr($accessToken, 0, 8)
     ]);
     
