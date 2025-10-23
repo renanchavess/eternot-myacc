@@ -222,17 +222,52 @@ function processApprovedPayment($payment, $logger, $config)
             return;
         }
         
-        // Decodificar external reference (formato: tipo_usuarioId_valor_timestamp)
+        // Decodificar external reference de forma robusta
+        // Formatos esperados:
+        // - tipo_usuarioId_packageId_timestamp (novo)
+        // - usuarioId_tipo_packageId_timestamp (legado)
+        // - variações com tokens extras (falha de integração)
         $refParts = explode('_', $externalReference);
-        if (count($refParts) < 4) {
-            $logger->logError('Formato de external reference inválido: ' . $externalReference);
+        
+        $type = $refParts[0] ?? null; // 'donate' ou 'buybox'
+        $userId = isset($refParts[1]) ? (int)$refParts[1] : 0;
+        
+        // Se detectarmos formato legado (ex.: usuarioId_donate_packageId_timestamp), ajustar
+        if ($type !== 'donate' && $type !== 'buybox' && isset($refParts[1]) && ($refParts[1] === 'donate' || $refParts[1] === 'buybox')) {
+            $userId = (int)$refParts[0];
+            $type = $refParts[1];
+        }
+        
+        if (!$type || !$userId) {
+            $logger->logError('Formato de external reference inválido', [
+                'external_reference' => $externalReference,
+                'parts' => $refParts
+            ]);
             return;
         }
         
-        $type = $refParts[0]; // 'donate' ou 'buybox'
-        $userId = (int)$refParts[1];
-        $packageId = $refParts[2];
-        $timestamp = $refParts[3];
+        // Identificar a chave do pacote com tolerância
+        $catalog = ($type === 'donate') ? ($config['mercadoPago']['donates'] ?? []) : ($config['mercadoPago']['boxes'] ?? []);
+        $packageId = null;
+        for ($i = 2; $i < count($refParts); $i++) {
+            if (isset($catalog[$refParts[$i]])) {
+                $packageId = $refParts[$i];
+                break;
+            }
+        }
+        
+        // Timestamp opcional: tenta último segmento numérico
+        $lastPart = end($refParts);
+        $timestamp = is_numeric($lastPart) ? $lastPart : null;
+        
+        if (!$packageId) {
+            $logger->logError('Pacote não identificado em external_reference', [
+                'external_reference' => $externalReference,
+                'parts' => $refParts,
+                'type' => $type
+            ]);
+            throw new Exception('Pacote não identificado na referência externa');
+        }
         
         // Verificar se a transação já foi processada
         $stmt = $db->prepare("SELECT id FROM mercadopago_transactions WHERE external_reference = ? AND status = 'completed'");
