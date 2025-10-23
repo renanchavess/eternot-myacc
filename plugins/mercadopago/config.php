@@ -48,10 +48,14 @@ $defaults = [
 
     // Pacotes de doação
     'donates' => [
-        'donate_10' => [ 'name' => 'Pacote Bronze',  'value' => 10,  'coins' => 500,  'extra' => 0,    'description' => 'Créditos para coins' ],
-        'donate_20' => [ 'name' => 'Pacote Prata',   'value' => 20,  'coins' => 1100, 'extra' => 100,  'description' => 'Créditos para coins' ],
-        'donate_50' => [ 'name' => 'Pacote Ouro',    'value' => 50,  'coins' => 3000, 'extra' => 500,  'description' => 'Créditos para coins' ],
-        'donate_100'=> [ 'name' => 'Pacote Diamante','value' => 100, 'coins' => 7000, 'extra' => 1500, 'description' => 'Créditos para coins' ],
+        'donate_3' => [ 'name' => 'Pacote Bronze',  'value' => 3,  'coins' => 250,  'extra' => 0,    'description' => 'Créditos para coins' ],
+        'donate_5' => [ 'name' => 'Pacote Bronze',  'value' => 5,  'coins' => 500,  'extra' => 0,    'description' => 'Créditos para coins' ],
+        'donate_10' => [ 'name' => 'Pacote Bronze',  'value' => 10,  'coins' => 1000,  'extra' => 0,    'description' => 'Créditos para coins' ],
+        'donate_20' => [ 'name' => 'Pacote Prata',   'value' => 20,  'coins' => 2000, 'extra' => 100,  'description' => 'Créditos para coins' ],
+        'donate_50' => [ 'name' => 'Pacote Ouro',    'value' => 50,  'coins' => 5000, 'extra' => 500,  'description' => 'Créditos para coins' ],
+        'donate_100'=> [ 'name' => 'Pacote Diamante','value' => 100, 'coins' => 10000, 'extra' => 1500, 'description' => 'Créditos para coins' ],
+        'donate_200'=> [ 'name' => 'Pacote Diamante','value' => 200, 'coins' => 20000, 'extra' => 4000, 'description' => 'Créditos para coins' ],
+        'donate_500'=> [ 'name' => 'Pacote Diamante','value' => 500, 'coins' => 50000, 'extra' => 15000, 'description' => 'Créditos para coins' ],
     ],
 
     // Boxes (opcional, para buybox)
