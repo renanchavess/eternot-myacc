@@ -372,9 +372,41 @@ function processDonation($userId, $packageId, $payment, $logger, $config)
     }
     
     // Adicionar moedas ao usuário
-    $coinType = $config['mercadoPago']['donationType'] ?? 'coins_transferable';
-    $stmt = $db->prepare("UPDATE accounts SET {$coinType} = {$coinType} + ? WHERE id = ?");
+    $coinType = 'coins_transferable';
+    $stmt = $db->prepare("UPDATE accounts SET coins_transferable = coins_transferable + ? WHERE id = ?");
     $stmt->execute([$coins, $userId]);
+    
+    // Registrar histórico na Store (store_history)
+    // Mapeamento coin_type no protocolo da Store: 0=transferable, 1=normal
+    $storeCoinType = 0;
+    // Modo: 0=normal, 1=gift (exibe como presente). Default: 1
+    $storeMode = $config['mercadoPago']['storeHistoryMode'] ?? 1;
+    // Descrição apresentada ao jogador
+    $orderId = $payment['id'] ?? null;
+    $description = 'Coins transferíveis comprados — Pedido #' . ($orderId ?? 'N/A');
+    
+    // Auditoria opcional em coins_transactions (C++)
+    if (!empty($config['mercadoPago']['enableCoinsAudit'])) {
+        // Mapeamento coins_transactions: type: 1=Add, coin_type: 3=Transferable
+        $auditCoinType = 3;
+        try {
+            $stmt = $db->prepare(
+                "INSERT INTO coins_transactions (account_id, type, coin_type, amount, description) VALUES (?, 1, ?, ?, ?)"
+            );
+            $stmt->execute([$userId, $auditCoinType, $coins, 'WEB PURCHASE Pedido #' . ($orderId ?? 'N/A')]);
+            $logger->logTransaction('coins_audit_entry_created', [
+                'account_id' => $userId,
+                'coin_type' => $auditCoinType,
+                'amount' => $coins
+            ]);
+        } catch (Exception $e) {
+            $logger->logError('Falha ao inserir coins_transactions: ' . $e->getMessage(), [
+                'account_id' => $userId,
+                'coin_type' => $auditCoinType,
+                'amount' => $coins
+            ]);
+        }
+    }
     
     $logger->logTransaction('donation_processed', [
         'user_id' => $userId,
