@@ -16,9 +16,12 @@ require_once '../system/login.php';
 require_once '../plugins/mercadopago/config.php';
 require_once '../plugins/mercadopago/MercadoPagoPayment.php';
 
+// Corrigir BASE_URL quando rodando dentro de /payments
+$BASE_URL_ROOT = preg_replace('#/payments/$#', '/', BASE_URL);
+
 // Verificar se o usuário está logado
 if (!$logged) {
-    header('Location: ' . BASE_URL . '?subtopic=accountmanagement');
+    header('Location: ' . $BASE_URL_ROOT . '?subtopic=accountmanagement');
     exit;
 }
 
