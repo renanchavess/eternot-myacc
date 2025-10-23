@@ -10,6 +10,7 @@
 
 // Incluir arquivos necessários
 require_once '../common.php';
+require_once '../system/init.php';
 require_once '../config.php';
 require_once '../plugins/mercadopago/config.php';
 require_once '../plugins/mercadopago/MercadoPagoSDK.php';
