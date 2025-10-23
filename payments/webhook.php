@@ -233,11 +233,7 @@ function processApprovedPayment($payment, $logger, $config)
         }
         
         // Registrar transação como concluída
-        $stmt = $db->prepare("
-            INSERT INTO mercadopago_transactions 
-            (external_reference, payment_id, user_id, type, package_id, amount, status, processed_at) 
-            VALUES (?, ?, ?, ?, ?, ?, 'completed', NOW())
-        ");
+        $stmt = $db->prepare("\n            INSERT INTO mercadopago_transactions \n            (external_reference, payment_id, user_id, type, package_id, amount, status, processed_at) \n            VALUES (?, ?, ?, ?, ?, ?, 'completed', NOW())\n        ");
         
         $stmt->execute([
             $externalReference,
@@ -282,7 +278,7 @@ function processDonation($userId, $packageId, $payment, $logger, $config)
     }
     
     // Adicionar moedas ao usuário
-    $coinType = $config['mercadoPago']['donationType'];
+    $coinType = $config['mercadoPago']['donationType'] ?? 'coins_transferable';
     $stmt = $db->prepare("UPDATE accounts SET {$coinType} = {$coinType} + ? WHERE id = ?");
     $stmt->execute([$coins, $userId]);
     
@@ -320,10 +316,7 @@ function processBuyBox($userId, $packageId, $payment, $logger, $config)
     
     // Adicionar itens ao personagem
     foreach ($box['items'] as $item) {
-        $stmt = $db->prepare("
-            INSERT INTO player_items (player_id, itemtype, count, attributes) 
-            SELECT id, ?, ?, '' FROM players WHERE name = ?
-        ");
+        $stmt = $db->prepare("\n            INSERT INTO player_items (player_id, itemtype, count, attributes) \n            SELECT id, ?, ?, '' FROM players WHERE name = ?\n        ");
         $stmt->execute([$item['id'], $item['count'], $playerName]);
     }
     

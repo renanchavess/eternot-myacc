@@ -31,6 +31,7 @@ $config['mercadoPago'] = [
 
     'currency' => 'BRL',
     'productName' => 'Premium Coins',
+    'donationType' => 'coins_transferable',
 
     // URLs de retorno e webhook no formato esperado pela classe
     'success_url' => $ROOT_BASE_URL . 'payments/donate.php?action=success',

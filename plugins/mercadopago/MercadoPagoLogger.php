@@ -1,28 +1,53 @@
 <?php
 /**
  * Logger para transações do Mercado Pago
- *
- * @name      MercadoPagoLogger
- * @author    MyAAC Team
- * @copyright 2025 MyAAC
  */
-
 class MercadoPagoLogger
 {
     private $logDir;
     private $enabled;
-    
+
     public function __construct($logDir = null, $enabled = true)
     {
         $this->logDir = $logDir ?: __DIR__ . '/logs';
         $this->enabled = $enabled;
-        
-        // Criar diretório de logs se não existir
-        if ($this->enabled && !is_dir($this->logDir)) {
-            mkdir($this->logDir, 0755, true);
+        // Garantir diretório válido e gravável
+        $this->ensureLogDir();
+    }
+
+    private function ensureLogDir()
+    {
+        if (!$this->enabled) {
+            return;
+        }
+        $dir = $this->logDir;
+        if (!is_dir($dir)) {
+            // tenta criar, incluindo pais
+            if (!@mkdir($dir, 0755, true) && !is_dir($dir)) {
+                // fallback para diretório temporário
+                $fallback = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'mercadopago_logs';
+                if (!is_dir($fallback)) {
+                    @mkdir($fallback, 0755, true);
+                }
+                if (is_dir($fallback) && is_writable($fallback)) {
+                    $this->logDir = $fallback;
+                } else {
+                    $this->enabled = false;
+                    error_log('[MercadoPagoLogger] Não foi possível criar diretório de logs: ' . $dir . ' (fallback: ' . $fallback . ')');
+                    return;
+                }
+            }
+        }
+        // tentar ajustar permissões se não gravável
+        if (!is_writable($this->logDir)) {
+            @chmod($this->logDir, 0755);
+            if (!is_writable($this->logDir)) {
+                $this->enabled = false;
+                error_log('[MercadoPagoLogger] Diretório de logs não gravável: ' . $this->logDir);
+            }
         }
     }
-    
+
     /**
      * Log de transação
      */
@@ -31,7 +56,7 @@ class MercadoPagoLogger
         if (!$this->enabled) {
             return;
         }
-        
+        $this->ensureLogDir();
         $logData = [
             'timestamp' => date('Y-m-d H:i:s'),
             'level' => $level,
@@ -40,11 +65,11 @@ class MercadoPagoLogger
             'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown'
         ];
-        
         $logFile = $this->logDir . '/transactions_' . date('Y-m-d') . '.log';
         $logLine = json_encode($logData) . PHP_EOL;
-        
-        file_put_contents($logFile, $logLine, FILE_APPEND | LOCK_EX);
+        if (false === @file_put_contents($logFile, $logLine, FILE_APPEND | LOCK_EX)) {
+            error_log('[MercadoPagoLogger] Falha ao escrever log: ' . $logFile);
+        }
     }
     
     /**
@@ -55,7 +80,7 @@ class MercadoPagoLogger
         if (!$this->enabled) {
             return;
         }
-        
+        $this->ensureLogDir();
         $logData = [
             'timestamp' => date('Y-m-d H:i:s'),
             'level' => $level,
@@ -64,11 +89,11 @@ class MercadoPagoLogger
             'headers' => $headers,
             'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
         ];
-        
         $logFile = $this->logDir . '/webhooks_' . date('Y-m-d') . '.log';
         $logLine = json_encode($logData) . PHP_EOL;
-        
-        file_put_contents($logFile, $logLine, FILE_APPEND | LOCK_EX);
+        if (false === @file_put_contents($logFile, $logLine, FILE_APPEND | LOCK_EX)) {
+            error_log('[MercadoPagoLogger] Falha ao escrever log: ' . $logFile);
+        }
     }
     
     /**
@@ -79,7 +104,7 @@ class MercadoPagoLogger
         if (!$this->enabled) {
             return;
         }
-        
+        $this->ensureLogDir();
         $logData = [
             'timestamp' => date('Y-m-d H:i:s'),
             'level' => 'ERROR',
@@ -87,11 +112,11 @@ class MercadoPagoLogger
             'context' => $context,
             'backtrace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 5)
         ];
-        
         $logFile = $this->logDir . '/errors_' . date('Y-m-d') . '.log';
         $logLine = json_encode($logData) . PHP_EOL;
-        
-        file_put_contents($logFile, $logLine, FILE_APPEND | LOCK_EX);
+        if (false === @file_put_contents($logFile, $logLine, FILE_APPEND | LOCK_EX)) {
+            error_log('[MercadoPagoLogger] Falha ao escrever log: ' . $logFile);
+        }
     }
     
     /**
@@ -102,18 +127,18 @@ class MercadoPagoLogger
         if (!$this->enabled) {
             return;
         }
-        
+        $this->ensureLogDir();
         $logData = [
             'timestamp' => date('Y-m-d H:i:s'),
             'level' => 'DEBUG',
             'message' => $message,
             'data' => $data
         ];
-        
         $logFile = $this->logDir . '/debug_' . date('Y-m-d') . '.log';
         $logLine = json_encode($logData) . PHP_EOL;
-        
-        file_put_contents($logFile, $logLine, FILE_APPEND | LOCK_EX);
+        if (false === @file_put_contents($logFile, $logLine, FILE_APPEND | LOCK_EX)) {
+            error_log('[MercadoPagoLogger] Falha ao escrever log: ' . $logFile);
+        }
     }
     
     /**
