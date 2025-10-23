@@ -256,6 +256,41 @@ function processApprovedPayment($payment, $logger, $config)
             }
         }
         
+        // Fallback 1: tentar resolver via banco (mercadopago_preferences)
+        if (!$packageId) {
+            $stmt = $db->prepare("SELECT type, package_id FROM mercadopago_preferences WHERE external_reference = ? LIMIT 1");
+            $stmt->execute([$externalReference]);
+            $pref = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($pref) {
+                $type = $pref['type'];
+                $packageId = $pref['package_id'];
+                $catalog = ($type === 'donate') ? ($config['mercadoPago']['donates'] ?? []) : ($config['mercadoPago']['boxes'] ?? []);
+                $logger->logDebug('external_reference_resolved_via_db', [
+                    'external_reference' => $externalReference,
+                    'type' => $type,
+                    'package_id' => $packageId
+                ]);
+            }
+        }
+        
+        // Fallback 2: tentar casar por valor do pagamento
+        if (!$packageId && !empty($catalog) && isset($payment['transaction_amount'])) {
+            $amount = (float)$payment['transaction_amount'];
+            foreach ($catalog as $key => $pkg) {
+                $val = isset($pkg['value']) ? (float)$pkg['value'] : null;
+                if ($val !== null && abs($val - $amount) < 0.01) {
+                    $packageId = $key;
+                    $logger->logDebug('external_reference_resolved_by_amount', [
+                        'external_reference' => $externalReference,
+                        'type' => $type,
+                        'amount' => $amount,
+                        'package_id' => $packageId
+                    ]);
+                    break;
+                }
+            }
+        }
+        
         // Timestamp opcional: tenta último segmento numérico
         $lastPart = end($refParts);
         $timestamp = is_numeric($lastPart) ? $lastPart : null;
