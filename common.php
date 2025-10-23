@@ -131,4 +131,36 @@ if (!IS_CLI) {
         require SYSTEM . 'exception.php';
     }
 }
+// Carregar variáveis de ambiente do arquivo .env (se existir)
+$envFile = BASE . '.env';
+if (file_exists($envFile)) {
+    $lines = @file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    if ($lines !== false) {
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if ($line === '' || $line[0] === '#') {
+                continue;
+            }
+            $pos = strpos($line, '=');
+            if ($pos === false) {
+                continue;
+            }
+            $name = trim(substr($line, 0, $pos));
+            $value = trim(substr($line, $pos + 1));
+            $len = strlen($value);
+            if ($len >= 2) {
+                $first = $value[0];
+                $last = $value[$len - 1];
+                if (($first === '"' && $last === '"') || ($first === "'" && $last === "'")) {
+                    $value = substr($value, 1, $len - 2);
+                }
+            }
+            // não sobrescrever se já estiver definido no ambiente
+            if (getenv($name) === false) {
+                putenv($name . '=' . $value);
+            }
+            $_ENV[$name] = $value;
+        }
+    }
+}
 require SYSTEM . 'autoload.php';
