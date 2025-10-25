@@ -86,3 +86,5 @@ landing
 system/pages/downloads.php
 
 .env
+# Ignore outfit sprites
+animaoutfit/outfits_anim/

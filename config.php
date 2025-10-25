@@ -88,7 +88,7 @@ $config = array(
 	),
 
 	// images
-	'outfit_images_url' => './outfit/animoutfit.php', // set to animoutfit.php for animated outfit
+	'outfit_images_url' => './animaoutfit/animoutfit.php', // set to animoutfit.php for animated outfit
 	'item_images_url' => 'images/items/', // set to images/items if you host your own items in images folder
 
 	// account
