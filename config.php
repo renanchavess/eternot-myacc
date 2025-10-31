@@ -272,13 +272,14 @@ $config = array(
 		'level' => true,
 		'experience' => true,
 		'magic_level' => true,
-		'balance' => true,
+		'balance' => false,
 		'marriage_info' => true, // only 0.3
-		'outfit' => true,
+		'outfit' => false,
 		'creation_date' => true,
 		'quests' => true,
 		'skills' => true,
-		'equipment' => true,
+		'details' => false,
+		'equipment' => false,
 		'frags' => true,
 		'deleted' => false, // should deleted characters from same account be still listed on the list of characters? When enabled it will show that character is "[DELETED]"
 	),

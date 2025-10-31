@@ -277,40 +277,6 @@ if ($player->isLoaded() && !$player->isDeleted()) {
         unset($storage);
     }
 
-    if ($config['characters']['equipment'] && $db->hasTableAndColumns('player_items', ['pid', 'sid', 'itemtype'])) {
-        $equipment = [];
-        $empty_slots = array("", "no_helmet", "no_necklace", "no_backpack", "no_armor", "no_handleft", "no_handright", "no_legs", "no_boots", "no_ring", "no_ammo");
-        if ($hidden) {
-            for ($i = 1; $i <= 10; $i++) {
-                $equipment[$i] = '<img src="images/items/' . $empty_slots[$i] . '.gif" width="40" height="40" border="0" alt="hidden" />';
-            }
-        } else {
-            global $db;
-            $eq_sql = $db->query('SELECT `pid`, `itemtype` FROM player_items WHERE player_id = ' . $player->getId() . ' AND (`pid` >= 1 and `pid` <= 10)');
-            foreach ($eq_sql as $eq)
-                $equipment[$eq['pid']] = $eq['itemtype'];
-
-            for ($i = 0; $i <= 10; $i++) {
-                if (!isset($equipment[$i]) || $equipment[$i] == 0)
-                    $equipment[$i] = $empty_slots[$i];
-            }
-
-            for ($i = 1; $i < 11; $i++) {
-                if (Validator::number($equipment[$i]))
-                    $equipment[$i] = getItemImage($equipment[$i]);
-                else
-                    $equipment[$i] = '<img src="images/items/' . $equipment[$i] . '.gif" width="40" height="40" border="0" alt=" ' . $equipment[$i] . '" />';
-            }
-
-            $skulls = array(
-                1 => 'yellow_skull',
-                2 => 'green_skull',
-                3 => 'white_skull',
-                4 => 'red_skull',
-                5 => 'black_skull'
-            );
-        }
-    }
 
     $dead_add_content = '';
     $deaths = array();
