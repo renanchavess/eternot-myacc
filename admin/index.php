@@ -69,6 +69,55 @@ include $file;
 $content .= ob_get_contents();
 ob_end_clean();
 
+// Alerta de fallback de download (últimas 24h)
+if ($logged && admin()) {
+  $fallbackAlertHtml = '';
+  $logFile = SYSTEM . 'data/launcher_fallback.jsonl';
+  if (@file_exists($logFile)) {
+    $lines = @file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    if (is_array($lines) && !empty($lines)) {
+      $now = time();
+      $recent = 0;
+      $latest = [];
+      // varre do fim para o começo (eventos mais novos primeiro), limita 50
+      foreach (array_slice(array_reverse($lines), 0, 50) as $line) {
+        $ev = json_decode($line, true);
+        if (!is_array($ev)) continue;
+        $ts = isset($ev['ts']) ? strtotime($ev['ts']) : 0;
+        if ($ts > ($now - 86400)) {
+          $recent++;
+        }
+        if (count($latest) < 5) {
+          $latest[] = $ev;
+        }
+      }
+
+      if ($recent > 0) {
+        // Monta HTML do alerta
+        $items = '';
+        foreach ($latest as $ev) {
+          $v = htmlspecialchars($ev['version'] ?? '', ENT_QUOTES, 'UTF-8');
+          $ts = htmlspecialchars($ev['ts'] ?? '', ENT_QUOTES, 'UTF-8');
+          $reason = htmlspecialchars($ev['reason'] ?? '', ENT_QUOTES, 'UTF-8');
+          $items .= '<li><strong>v' . $v . '</strong> — ' . $ts . (!empty($reason) ? ' — ' . $reason : '') . '</li>';
+        }
+
+        $fallbackAlertHtml = '<div class="alert alert-warning" role="alert" style="margin-bottom: 16px;">'
+          . '<strong>Downloads por fallback nas últimas 24h:</strong> '
+          . $recent
+          . '<ul style="margin-top:8px;">'
+          . $items
+          . '</ul>'
+          . '</div>';
+      }
+    }
+  }
+
+  if (!empty($fallbackAlertHtml)) {
+    $content = $fallbackAlertHtml . $content;
+  }
+}
+
 // template
 $template_path = 'template/';
 require ADMIN . $template_path . 'template.php';

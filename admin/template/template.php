@@ -164,6 +164,36 @@ defined('MYAAC') or die('Direct access not allowed!'); ?>
             </h1>
         </section>
         <section class="content">
+            <?php
+            // Alerta de fallback recente (últimas 24h)
+            if ($logged && admin()) {
+                $fbLog = SYSTEM . 'data/launcher_fallback.jsonl';
+                $fbCount = 0;
+                $recentSince = time() - 24 * 3600;
+                if (file_exists($fbLog)) {
+                    $lines = @file($fbLog, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                    if ($lines) {
+                        // Analisa as últimas 200 linhas para desempenho
+                        $slice = array_slice($lines, max(0, count($lines) - 200));
+                        foreach ($slice as $line) {
+                            $e = json_decode($line, true);
+                            if (is_array($e) && isset($e['ts'])) {
+                                $ts = strtotime($e['ts']);
+                                if ($ts !== false && $ts >= $recentSince) {
+                                    $fbCount++;
+                                }
+                            }
+                        }
+                    }
+                }
+                if ($fbCount > 0) {
+                    echo '<div class="alert alert-warning" role="alert">'
+                        . '<strong>Fallback de download detectado</strong>: ' . $fbCount . ' ocorrência(s) nas últimas 24h. '
+                        . '<a class="alert-link" href="?p=logs">Ver detalhes</a>'
+                        . '</div>';
+                }
+            }
+            ?>
             <?= $content; ?>
         </section>
 

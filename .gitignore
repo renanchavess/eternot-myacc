@@ -26,7 +26,8 @@ tmp
 config.local.php
 cache/serverstatus.txt
 cache/usercounter.tx
-downloads/*
+downloads/*.zip
+!downloads/.htaccess
 logs/
 logs
 !logs/index.html
