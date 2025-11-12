@@ -27,6 +27,7 @@ config.local.php
 cache/serverstatus.txt
 cache/usercounter.tx
 downloads/*.zip
+downloads/*.exe
 !downloads/.htaccess
 logs/
 logs
