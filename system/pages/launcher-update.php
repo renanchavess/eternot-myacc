@@ -21,21 +21,19 @@ $backupUrl = isset($_GET['backup']) ? $_GET['backup'] : rtrim($backupBase, '/').
 // Caminho de extração adaptável ao padrão solicitado
 $extractPath = sprintf('c:\\Eternot\\Eternot-%s', $version);
 
-// $response = [
-//     'date_version' => '2025-11-10 21:07:25',
-//     'version' => $version,
-//     'url_download' => 'https://drive.usercontent.google.com/download?id=1u2BpAj1_p0WOiteUZLaf-CyqyBAmh6GF&export=download&authuser=0&confirm=t&uuid=1ce3239b-6502-4038-a9dc-05eb4c0f9d90&at=ALWLOp7yCkjjx3s7o1FI626V33Pq%3A1762819689953',
-//     'url_download_backup' => $backupUrl,
-//     'extract_path' => $extractPath,
-//     'backup_available' => true,
-// ];
-
 $response = [
-    'date_version' => '2025-11-10 13:00:00',
-    'version' => '1503',
-    'url_download' => 'https://drive.usercontent.google.com/download?id=16Dw57hGGevscuj8y4kWktMKf34ptMoXX&export=download&authuser=0&confirm=t&uuid=b7225e40-2988-46d7-abd5-6142f7665c0a&at=ALWLOp5ylpt9pD5GMQ9p0L-Z9p5k:1762811908968',
-    'url_download_backup' => $backupUrl
+    'date_version' => '2025-11-15 22:00:00',
+    'version' => $version,
+    'url_download' => 'https://drive.usercontent.google.com/download?id=1wpLPHWXMiYs-UYqdy2dbh2SqYx1T-sYv&export=download&authuser=0&confirm=t&uuid=535aa98e-4644-4c64-a7de-99bc47a003d7&at=ALWLOp4Rj2nvTKVcuUdjPDLWL1us:1763181346977',
+    'url_download_backup' => $backupUrl,
 ];
+
+// $response = [
+//     'date_version' => '2025-11-10 13:00:00',
+//     'version' => '1503',
+//     'url_download' => 'https://drive.usercontent.google.com/download?id=16Dw57hGGevscuj8y4kWktMKf34ptMoXX&export=download&authuser=0&confirm=t&uuid=b7225e40-2988-46d7-abd5-6142f7665c0a&at=ALWLOp5ylpt9pD5GMQ9p0L-Z9p5k:1762811908968',
+//     'url_download_backup' => $backupUrl
+// ];
 
 echo json_encode($response, JSON_UNESCAPED_SLASHES);
 exit;
